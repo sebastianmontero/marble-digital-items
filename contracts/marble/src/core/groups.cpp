@@ -6,8 +6,17 @@ ACTION marble::newgroup(string title, string description, name group_name, name 
     config_table configs(get_self(), get_self().value);
     auto conf = configs.get();
 
-    //authenticate
-    require_auth(conf.admin);
+    if (!has_auth(conf.admin)){
+      require_auth( manager );
+      Setting setting(get_self());
+      auto bennyfi_contract = setting.getFirstValueAs<name>(common::SETTING_BENNYFI_CONTRACT);
+      eosio::action(
+      eosio::permission_level{get_self(), "active"_n},
+      bennyfi_contract,
+      "cancreatetkn"_n,
+      std::make_tuple(manager))
+      .send();
+    }
 
     //open groups table, search for group
     groups_table groups(get_self(), get_self().value);

@@ -22,12 +22,12 @@ ACTION reclaimitem(uint64_t serial);
 //consume an item
 //post: inline releaseall() if bond(s) exist
 //auth: owner
-ACTION consumeitem(uint64_t serial);
+// ACTION consumeitem(uint64_t serial);
 
 //destroy an item
 //post: inline releaseall() if bond(s) exist
 //auth: manager
-ACTION destroyitem(uint64_t serial, string memo);
+// ACTION destroyitem(uint64_t serial, string memo);
 
 //freeze an item to prevent transfer, activate, consume, reclaim, or destroy
 //auth: manager

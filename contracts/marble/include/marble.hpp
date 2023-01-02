@@ -11,6 +11,7 @@
 #include <eosio/action.hpp>
 #include <eosio/singleton.hpp>
 #include <eosio/asset.hpp>
+#include <setting.hpp>
 
 using namespace std;
 using namespace eosio;
@@ -49,7 +50,18 @@ CONTRACT marble : public contract
     #include <layers/attributes.hpp>
     #include <layers/events.hpp>
     #include <layers/frames.hpp>
-    #include <layers/bonds.hpp>
-    #include <layers/wallets.hpp>
+    // #include <layers/bonds.hpp>
+    // #include <layers/wallets.hpp>
+
+    ACTION setsetting(const eosio::name &setter, const string &key, const FlexValue &value);
+
+    ACTION appndsetting(const eosio::name &setter, const string &key, const FlexValue &value);
+
+    ACTION erasesetting(const eosio::name &setter, const string &key);
+
+    ACTION clipsetting(const eosio::name &setter, const string &key, const FlexValue &value);
+
+    private:
+    void setSetting(const eosio::name &setter, const string &key, const FlexValue &value);
 
 };

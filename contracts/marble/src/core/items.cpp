@@ -143,90 +143,90 @@ ACTION marble::reclaimitem(uint64_t serial)
     });
 }
 
-ACTION marble::consumeitem(uint64_t serial)
-{
-    //open items table, get item
-    items_table items(get_self(), get_self().value);
-    auto& itm = items.get(serial, "item not found");
+// ACTION marble::consumeitem(uint64_t serial)
+// {
+//     //open items table, get item
+//     items_table items(get_self(), get_self().value);
+//     auto& itm = items.get(serial, "item not found");
 
-    //authenticate
-    require_auth(itm.owner);
+//     //authenticate
+//     require_auth(itm.owner);
 
-    //open groups table, get group
-    groups_table groups(get_self(), get_self().value);
-    auto& grp = groups.get(itm.group.value, "group not found");
+//     //open groups table, get group
+//     groups_table groups(get_self(), get_self().value);
+//     auto& grp = groups.get(itm.group.value, "group not found");
 
-    //open behaviors table, get behavior
-    behaviors_table behaviors(get_self(), itm.group.value);
-    auto& bhvr = behaviors.get(name("consume").value, "behavior not found");
+//     //open behaviors table, get behavior
+//     behaviors_table behaviors(get_self(), itm.group.value);
+//     auto& bhvr = behaviors.get(name("consume").value, "behavior not found");
 
-    //validate
-    check(bhvr.state, "item is not consumable");
-    check(grp.supply > 0, "cannot reduce supply below zero");
+//     //validate
+//     check(bhvr.state, "item is not consumable");
+//     check(grp.supply > 0, "cannot reduce supply below zero");
 
-    //open bonds table, find bond
-    bonds_table bonds(get_self(), serial);
-    auto bond_itr = bonds.find(CORE_SYM.code().raw());
+//     //open bonds table, find bond
+//     bonds_table bonds(get_self(), serial);
+//     auto bond_itr = bonds.find(CORE_SYM.code().raw());
 
-    //if bond found
-    if (bond_itr != bonds.end()) {
-        //send inline marble::releaseall to self
-        //auth: self
-        action(permission_level{get_self(), name("active")}, get_self(), name("releaseall"), make_tuple(
-            serial, //serial
-            itm.owner //release_to
-        )).send();
-    }
+//     //if bond found
+//     if (bond_itr != bonds.end()) {
+//         //send inline marble::releaseall to self
+//         //auth: self
+//         action(permission_level{get_self(), name("active")}, get_self(), name("releaseall"), make_tuple(
+//             serial, //serial
+//             itm.owner //release_to
+//         )).send();
+//     }
 
-    //update group
-    groups.modify(grp, same_payer, [&](auto& col) {
-        col.supply -= 1;
-    });
+//     //update group
+//     groups.modify(grp, same_payer, [&](auto& col) {
+//         col.supply -= 1;
+//     });
 
-    //erase item
-    items.erase(itm);
-}
+//     //erase item
+//     items.erase(itm);
+// }
 
-ACTION marble::destroyitem(uint64_t serial, string memo)
-{
-    //open items table, get item
-    items_table items(get_self(), get_self().value);
-    auto& itm = items.get(serial, "item not found");
+// ACTION marble::destroyitem(uint64_t serial, string memo)
+// {
+//     //open items table, get item
+//     items_table items(get_self(), get_self().value);
+//     auto& itm = items.get(serial, "item not found");
 
-    //open groups table, get group
-    groups_table groups(get_self(), get_self().value);
-    auto& grp = groups.get(itm.group.value, "group not found");
+//     //open groups table, get group
+//     groups_table groups(get_self(), get_self().value);
+//     auto& grp = groups.get(itm.group.value, "group not found");
 
-    //authenticate
-    require_auth(grp.manager);
+//     //authenticate
+//     require_auth(grp.manager);
 
-    //open behaviors table, get behavior
-    behaviors_table behaviors(get_self(), itm.group.value);
-    auto& bhvr = behaviors.get(name("destroy").value, "behavior not found");
+//     //open behaviors table, get behavior
+//     behaviors_table behaviors(get_self(), itm.group.value);
+//     auto& bhvr = behaviors.get(name("destroy").value, "behavior not found");
 
-    //validate
-    check(bhvr.state, "item is not destroyable");
-    check(grp.supply > 0, "cannot reduce supply below zero");
+//     //validate
+//     check(bhvr.state, "item is not destroyable");
+//     check(grp.supply > 0, "cannot reduce supply below zero");
 
-    //open bonds table, find bond
-    bonds_table bonds(get_self(), serial);
-    auto bond_itr = bonds.find(CORE_SYM.code().raw());
+//     //open bonds table, find bond
+//     bonds_table bonds(get_self(), serial);
+//     auto bond_itr = bonds.find(CORE_SYM.code().raw());
 
-    //if bond found
-    if (bond_itr != bonds.end()) {
-        //send inline marble::releaseall to self
-        //auth: self
-        action(permission_level{get_self(), name("active")}, get_self(), name("releaseall"), make_tuple(
-            serial, //serial
-            itm.owner //release_to
-        )).send();
-    }
+//     //if bond found
+//     if (bond_itr != bonds.end()) {
+//         //send inline marble::releaseall to self
+//         //auth: self
+//         action(permission_level{get_self(), name("active")}, get_self(), name("releaseall"), make_tuple(
+//             serial, //serial
+//             itm.owner //release_to
+//         )).send();
+//     }
 
-    //update group
-    groups.modify(grp, same_payer, [&](auto& col) {
-        col.supply -= 1;
-    });
+//     //update group
+//     groups.modify(grp, same_payer, [&](auto& col) {
+//         col.supply -= 1;
+//     });
 
-    //erase item
-    items.erase(itm);
-}
+//     //erase item
+//     items.erase(itm);
+// }
