@@ -38,8 +38,10 @@ TABLE frame {
 
     uint64_t primary_key() const { return frame_name.value; }
     uint64_t by_group() const { return group.value; }
+    uint128_t by_group_frame() const { return (uint128_t(group.value) << 64) + frame_name.value; }
     EOSLIB_SERIALIZE(frame, (frame_name)(group)(default_tags)(default_attributes))
 };
 typedef multi_index<"frames"_n, frame,
-    indexed_by<"bygroup"_n, const_mem_fun<frame, uint64_t, &frame::by_group>>
+    indexed_by<"bygroup"_n, const_mem_fun<frame, uint64_t, &frame::by_group>>,
+    indexed_by<"bygrpfrm"_n, const_mem_fun<frame, uint128_t, &frame::by_group_frame>>
 > frames_table;

@@ -27,8 +27,11 @@ TABLE group {
     uint64_t supply_cap;
 
     uint64_t primary_key() const { return group_name.value; }
+    uint128_t by_manager_group() const { return (uint128_t(manager.value) << 64) + group_name.value; }
 
     EOSLIB_SERIALIZE(group, (title)(description)(group_name)(manager)
         (supply)(issued_supply)(supply_cap))
 };
-typedef multi_index<name("groups"), group> groups_table;
+typedef multi_index<name("groups"), group,
+    indexed_by<"bymgrgrp"_n, const_mem_fun<group, uint128_t, &group::by_manager_group>>
+> groups_table;

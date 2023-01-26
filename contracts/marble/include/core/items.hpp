@@ -51,10 +51,14 @@ TABLE item {
     uint64_t primary_key() const { return serial; }
     uint64_t by_group() const { return group.value; }
     uint64_t by_owner() const { return owner.value; }
+    uint128_t by_group_serial() const { return (uint128_t(group.value) << 64) + serial; }
+    uint128_t by_owner_serial() const { return (uint128_t(owner.value) << 64) + serial; }
 
     EOSLIB_SERIALIZE(item, (serial)(group)(owner))
 };
 typedef multi_index<name("items"), item,
     indexed_by<"bygroup"_n, const_mem_fun<item, uint64_t, &item::by_group>>,
-    indexed_by<"byowner"_n, const_mem_fun<item, uint64_t, &item::by_owner>>
+    indexed_by<"byowner"_n, const_mem_fun<item, uint64_t, &item::by_owner>>,
+    indexed_by<"bygroupsrl"_n, const_mem_fun<item, uint128_t, &item::by_group_serial>>,
+    indexed_by<"byownersrl"_n, const_mem_fun<item, uint128_t, &item::by_owner_serial>>
 > items_table;
