@@ -61,6 +61,8 @@ CONTRACT marble : public contract
 
     ACTION clipsetting(const eosio::name &setter, const string &key, const FlexValue &value);
 
+    ACTION reset(const uint64_t limit);
+
     private:
     void setSetting(const eosio::name &setter, const string &key, const FlexValue &value);
 
